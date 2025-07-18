@@ -226,6 +226,12 @@ body {
     align-items: center;
     justify-content: space-between;
     height: 70px;
+}
+
+.header__left,
+.header__right {
+    display: flex;
+    align-items: center;
     gap: var(--space-4);
 }
 
@@ -1321,4 +1327,3 @@ select:focus {
         color: black !important;
     }
 }
-
