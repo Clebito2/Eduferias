@@ -127,33 +127,81 @@ class EduFeriasApp {
 
     // ===== WEATHER INTEGRATION =====
     async loadWeather() {
-        try {
-            // Using a free weather API (OpenWeatherMap)
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Goiânia&appid=demo&units=metric&lang=pt_br`);
-            
-            // Fallback to mock data if API fails
-            const mockWeather = {
-                weather: [{ main: 'Clear', description: 'céu limpo' }],
-                main: { temp: 25 }
-            };
-            
-            this.state.weather = response.ok ? await response.json() : mockWeather;
-            this.updateWeatherDisplay();
-        } catch (error) {
-            console.log('Weather API not available, using mock data');
-            this.state.weather = {
-                weather: [{ main: 'Clear', description: 'céu limpo' }],
-                main: { temp: 25 }
-            };
-            this.updateWeatherDisplay();
+        // IMPORTANTE: Substitua 'SUA_CHAVE_API' pela sua chave da API do OpenWeatherMap.
+        // Você pode obter uma gratuitamente em https://openweathermap.org/appid
+        const apiKey = 'SUA_CHAVE_API';
+
+        // Função para buscar o clima por coordenadas
+        const fetchWeatherByCoords = async (lat, lon) => {
+            try {
+                // Se a chave da API não for fornecida, usa dados de demonstração
+                if (apiKey === 'SUA_CHAVE_API') {
+                    console.warn("Usando dados de clima de demonstração. Por favor, adicione sua chave da API do OpenWeatherMap.");
+                    this.state.weather = { name: 'Goiânia', main: { temp: 28 }, weather: [{ main: 'Clear', description: 'céu limpo' }] };
+                    this.updateWeatherDisplay();
+                    return;
+                }
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`);
+                if (!response.ok) throw new Error('Dados do clima não disponíveis para as coordenadas.');
+                this.state.weather = await response.json();
+                this.updateWeatherDisplay();
+            } catch (error) {
+                console.error('Erro ao buscar clima por coordenadas:', error);
+                await fetchWeatherByCity('Goiânia'); // Tenta com a cidade do usuário como fallback
+            }
+        };
+
+        // Função para buscar o clima por nome da cidade
+        const fetchWeatherByCity = async (city = 'Goiânia') => {
+            try {
+                 // Se a chave da API não for fornecida, usa dados de demonstração
+                if (apiKey === 'SUA_CHAVE_API') {
+                    this.state.weather = { name: 'Goiânia', main: { temp: 28 }, weather: [{ main: 'Clear', description: 'céu limpo' }] };
+                    this.updateWeatherDisplay();
+                    return;
+                }
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=pt_br`);
+                if (!response.ok) throw new Error('Dados do clima não disponíveis para a cidade.');
+                this.state.weather = await response.json();
+                this.updateWeatherDisplay();
+            } catch (error) {
+                console.error(`Erro ao buscar clima por cidade (${city}):`, error);
+                this.updateWeatherDisplay(true); // Mostra estado de erro
+            }
+        };
+
+        // Tenta obter a geolocalização do usuário
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    fetchWeatherByCoords(latitude, longitude);
+                },
+                (error) => {
+                    console.warn(`Erro de geolocalização (${error.code}): ${error.message}`);
+                    // Como sei que você mora em Goiânia, usei como fallback principal.
+                    fetchWeatherByCity('Goiânia');
+                }
+            );
+        } else {
+            console.warn('Geolocalização não é suportada por este navegador.');
+            // Fallback para navegadores sem geolocalização
+            fetchWeatherByCity('Goiânia');
         }
     }
 
-    updateWeatherDisplay() {
-        const weatherIcon = document.getElementById('weather-icon');
-        const weatherTemp = document.getElementById('weather-temp');
-        
-        if (!this.state.weather || !weatherIcon || !weatherTemp) return;
+    updateWeatherDisplay(error = false) {
+        const weatherIndicator = document.querySelector('.weather-indicator');
+        if (!weatherIndicator) return;
+
+        if (error || !this.state.weather) {
+            weatherIndicator.innerHTML = `
+                <span class="weather-icon" aria-hidden="true">🌦️</span>
+                <span class="weather-temp">Clima indisponível</span>
+            `;
+            weatherIndicator.title = "Não foi possível obter os dados do clima.";
+            return;
+        }
 
         const iconMap = {
             'Clear': '☀️',
@@ -162,12 +210,20 @@ class EduFeriasApp {
             'Snow': '❄️',
             'Thunderstorm': '⛈️',
             'Drizzle': '🌦️',
-            'Mist': '🌫️'
+            'Mist': '🌫️',
+            'Haze': '🌫️',
+            'Fog': '🌫️'
         };
 
         const weatherMain = this.state.weather.weather[0].main;
-        weatherIcon.textContent = iconMap[weatherMain] || '🌤️';
-        weatherTemp.textContent = `${Math.round(this.state.weather.main.temp)}°C`;
+        const temp = Math.round(this.state.weather.main.temp);
+        const cityName = this.state.weather.name;
+
+        weatherIndicator.innerHTML = `
+            <span class="weather-icon" id="weather-icon" aria-hidden="true">${iconMap[weatherMain] || '🌤️'}</span>
+            <span class="weather-temp" id="weather-temp">${temp}°C em ${cityName}</span>
+        `;
+        weatherIndicator.title = `Clima atual em ${cityName}: ${this.state.weather.weather[0].description}`;
     }
 
     // ===== ACTIVITY MANAGEMENT =====
@@ -1522,4 +1578,3 @@ const additionalStyles = `
 const styleSheet = document.createElement('style');
 styleSheet.textContent = additionalStyles;
 document.head.appendChild(styleSheet);
-
