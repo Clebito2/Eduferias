@@ -1,0 +1,123 @@
+{
+  "name": "EduFérias - Atividades Educativas para Crianças",
+  "short_name": "EduFérias",
+  "description": "Central de atividades educativas para manter as crianças ocupadas durante as férias. Aprender brincando, crescer sorrindo!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFDFE",
+  "theme_color": "#FF6B6B",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["education", "kids", "family", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "EduFérias no celular"
+    },
+    {
+      "src": "assets/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "EduFérias no desktop"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gerar Atividade",
+      "short_name": "Gerar",
+      "description": "Gerar uma nova atividade educativa",
+      "url": "/#activities",
+      "icons": [
+        {
+          "src": "assets/shortcut-generate.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Planejador",
+      "short_name": "Planejar",
+      "description": "Ver planejador semanal",
+      "url": "/#planner",
+      "icons": [
+        {
+          "src": "assets/shortcut-planner.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Conquistas",
+      "short_name": "Badges",
+      "description": "Ver conquistas e badges",
+      "url": "/#achievements",
+      "icons": [
+        {
+          "src": "assets/shortcut-achievements.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
+
