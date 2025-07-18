@@ -129,7 +129,7 @@ class EduFeriasApp {
     async loadWeather() {
         try {
             // Using a free weather API (OpenWeatherMap)
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=São Paulo&appid=demo&units=metric&lang=pt_br`);
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Goiânia&appid=demo&units=metric&lang=pt_br`);
             
             // Fallback to mock data if API fails
             const mockWeather = {
